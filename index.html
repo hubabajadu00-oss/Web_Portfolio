@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Александр | Performance Marketing & Media Buying</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-flex">
+            <div class="logo">Alex.<span>Performance</span></div>
+            <nav>
+                <a href="#about">Обо мне</a>
+                <a href="#cases">Кейсы (STAR)</a>
+                <a href="#roi-calc">ROI Калькулятор</a>
+                <a href="#contacts" class="btn-primary">Связаться</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Управление трафиком.<br><span class="highlight">Масштабирование прибыли.</span></h1>
+            <p>Performance-маркетолог и Media Buyer. Управляю бюджетами, оптимизирую юнит-экономику, стабильно держу ROI > 120% на высококонкурентных рынках.</p>
+            <div class="hero-buttons">
+                <a href="#cases" class="btn-primary">Смотреть кейсы</a>
+                <a href="#roi-calc" class="btn-secondary">Интерактивный дашборд</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="metrics" class="metrics">
+        <div class="container metrics-grid">
+            <div class="metric-card">
+                <h3>$XX,XXX+</h3>
+                <p>Ежемесячный бюджет в управлении</p>
+            </div>
+            <div class="metric-card">
+                <h3>145%</h3>
+                <p>Средний ROI по ключевым проектам</p>
+            </div>
+            <div class="metric-card">
+                <h3>-34%</h3>
+                <p>Снижение CPA при масштабировании</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="cases" class="cases">
+        <div class="container">
+            <h2>Доказанные результаты <span class="highlight">(Метод STAR)</span></h2>
+            <p class="section-subtitle">Глубокая аналитика и прозрачная отчетность. Без воды.</p>
+            
+            <div class="case-card">
+                <div class="case-info">
+                    <h3>3 Ключевых Performance-Кейса</h3>
+                    <p>Подробный разбор 3-х проектов: от проблем с масштабированием до удержания стоимости лида и роста чистой прибыли. Описано по корпоративному стандарту STAR (Situation, Task, Action, Result).</p>
+                    <ul class="star-list">
+                        <li><strong>S (Ситуация):</strong> Анализ исходных данных и unit-экономики.</li>
+                        <li><strong>T (Задача):</strong> Постановка KPI и целей масштабирования.</li>
+                        <li><strong>A (Действие):</strong> Оптимизация кампаний, трекинг, сплит-тесты.</li>
+                        <li><strong>R (Результат):</strong> Итоговые метрики в $ и %.</li>
+                    </ul>
+                    <a href="https://telegra.ph/Digital-Marketing--Media-Buying--Cases-09-21" target="_blank" class="btn-primary">Читать кейсы (Instant View) ↗</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roi-calc" class="roi-dashboard">
+        <div class="container">
+            <h2>Интерактивный <span class="highlight">ROI-Калькулятор</span></h2>
+            <p class="section-subtitle">Смоделируйте результаты для вашего проекта на основе моих средних метрик конверсии.</p>
+            
+            <div class="dashboard-grid">
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Бюджет на рекламу ($): <span id="budget-val">10000</span></label>
+                        <input type="range" id="budget" min="1000" max="100000" step="1000" value="10000">
+                    </div>
+                    <div class="control-group">
+                        <label>Средняя цена клика (CPC, $): <span id="cpc-val">1.50</span></label>
+                        <input type="range" id="cpc" min="0.1" max="10" step="0.1" value="1.5">
+                    </div>
+                    <div class="control-group">
+                        <label>Конверсия в Лид (CR, %): <span id="cr-val">8</span></label>
+                        <input type="range" id="cr" min="0.5" max="20" step="0.5" value="8">
+                    </div>
+                    <div class="control-group">
+                        <label>Доход с одного Лида (LTV, $): <span id="ltv-val">45</span></label>
+                        <input type="range" id="ltv" min="10" max="500" step="5" value="45">
+                    </div>
+                    
+                    <div class="results-summary">
+                        <div class="result-box highlight-box">
+                            <h4>Прогнозируемый ROI</h4>
+                            <h2 id="roi-result">140%</h2>
+                        </div>
+                        <div class="result-box">
+                            <h4>Чистая прибыль</h4>
+                            <h2 id="profit-result">$14,000</h2>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="roiChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contacts">
+        <div class="container footer-content">
+            <div class="footer-info">
+                <h2>Готов обсудить ваш проект</h2>
+                <p>Свяжитесь со мной для аудита ваших текущих кампаний или обсуждения позиции.</p>
+            </div>
+            <div class="footer-links">
+                <a href="https://t.me/popartpop" target="_blank" class="social-link">Telegram: @popartpop</a>
+                <a href="mailto:sochirt16@gmail.com" class="social-link">Email: sochirt16@gmail.com</a>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>2026 © Александр. Конфиденциальность соблюдена.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
