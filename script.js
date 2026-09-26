@@ -1,4 +1,4 @@
-// Ожидаем загрузки DOM
+﻿// Ожидаем загрузки DOM
 document.addEventListener('DOMContentLoaded', function() {
     
     // Элементы DOM для дашборда
@@ -137,3 +137,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Первичный расчет при загрузке
     updateCalc();
 });
+
+
+// --- ЛОГИКА ЗАКРЫТОЙ БАЗЫ ДОКАЗАТЕЛЬСТВ (HR VAULT) ---
+function unlockVault() {
+    const input = document.getElementById('vault-pass');
+    const error = document.getElementById('vault-error');
+    const authBox = document.getElementById('vault-auth-box');
+    const vaultContent = document.getElementById('vault-content');
+    
+    const key = input.value.trim().toUpperCase();
+    if (key === 'ALEX2026' || key === 'POPARTPOP' || key === 'HR2026') {
+        error.style.display = 'none';
+        authBox.style.display = 'none';
+        vaultContent.style.display = 'block';
+    } else {
+        error.style.display = 'block';
+        input.style.borderColor = '#ff5555';
+    }
+}
+
+function lockVault() {
+    document.getElementById('vault-auth-box').style.display = 'block';
+    document.getElementById('vault-content').style.display = 'none';
+    document.getElementById('vault-pass').value = '';
+}
