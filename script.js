@@ -1,143 +1,120 @@
-﻿// Ожидаем загрузки DOM
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // Элементы DOM для дашборда
+﻿// Инициализация калькулятора окупаемости
+document.addEventListener('DOMContentLoaded', () => {
     const budgetInput = document.getElementById('budget');
     const cpcInput = document.getElementById('cpc');
     const crInput = document.getElementById('cr');
-    const ltvInput = document.getElementById('ltv');
-    
+    const checkInput = document.getElementById('check');
+
     const budgetVal = document.getElementById('budget-val');
     const cpcVal = document.getElementById('cpc-val');
     const crVal = document.getElementById('cr-val');
-    const ltvVal = document.getElementById('ltv-val');
-    
-    const roiResult = document.getElementById('roi-result');
-    const profitResult = document.getElementById('profit-result');
+    const checkVal = document.getElementById('check-val');
 
-    // Инициализация графика (Chart.js)
-    const ctx = document.getElementById('roiChart').getContext('2d');
-    
-    // Градиенты для графика
-    const revGradient = ctx.createLinearGradient(0, 0, 0, 400);
-    revGradient.addColorStop(0, 'rgba(16, 185, 129, 0.8)'); // green
-    revGradient.addColorStop(1, 'rgba(16, 185, 129, 0.1)');
-    
-    const expGradient = ctx.createLinearGradient(0, 0, 0, 400);
-    expGradient.addColorStop(0, 'rgba(239, 68, 68, 0.8)'); // red
-    expGradient.addColorStop(1, 'rgba(239, 68, 68, 0.1)');
+    const resClicks = document.getElementById('res-clicks');
+    const resLeads = document.getElementById('res-leads');
+    const resRevenue = document.getElementById('res-revenue');
+    const resProfit = document.getElementById('res-profit');
+    const resRoi = document.getElementById('res-roi');
 
-    let chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Расходы (Бюджет)', 'Доходы (Выручка)'],
-            datasets: [{
-                label: 'Сумма ($)',
-                data: [10000, 24000],
-                backgroundColor: [expGradient, revGradient],
-                borderWidth: 0,
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return '$' + context.raw.toLocaleString();
-                        }
-                    }
-                }
+    let roiChart;
+
+    function initChart() {
+        const ctx = document.getElementById('roiChart').getContext('2d');
+        roiChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Бюджет (Расход)', 'Выручка', 'Чистая прибыль'],
+                datasets: [{
+                    label: 'Финансовый результат (₽)',
+                    data: [0, 0, 0],
+                    backgroundColor: [
+                        'rgba(255, 68, 68, 0.7)',
+                        'rgba(0, 230, 118, 0.7)',
+                        'rgba(0, 240, 255, 0.9)'
+                    ],
+                    borderColor: [
+                        '#ff4444',
+                        '#00e676',
+                        '#00f0ff'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.05)'
-                    },
-                    ticks: {
-                        color: '#94a3b8',
-                        callback: function(value) {
-                            return '$' + value.toLocaleString();
-                        }
-                    }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
                 },
-                x: {
-                    grid: {
-                        display: false
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: { color: '#888' }
                     },
-                    ticks: {
-                        color: '#94a3b8',
-                        font: {
-                            size: 14,
-                            weight: 'bold'
-                        }
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#eee' }
                     }
                 }
             }
-        }
-    });
+        });
+    }
 
-    // Функция обновления расчетов
     function updateCalc() {
         const budget = parseFloat(budgetInput.value);
         const cpc = parseFloat(cpcInput.value);
-        const cr = parseFloat(crInput.value) / 100;
-        const ltv = parseFloat(ltvInput.value);
+        const cr = parseFloat(crInput.value);
+        const avgCheck = parseFloat(checkInput.value);
 
-        // Обновляем отображение значений над ползунками
-        budgetVal.textContent = budget.toLocaleString();
-        cpcVal.textContent = cpc.toFixed(2);
-        crVal.textContent = (cr * 100).toFixed(1);
-        ltvVal.textContent = ltv.toLocaleString();
+        budgetVal.innerText = budget.toLocaleString('ru-RU') + ' ₽';
+        cpcVal.innerText = cpc + ' ₽';
+        crVal.innerText = cr + '%';
+        checkVal.innerText = avgCheck.toLocaleString('ru-RU') + ' ₽';
 
-        // Математика Performance маркетинга
-        const clicks = budget / cpc;
-        const leads = clicks * cr;
-        const revenue = leads * ltv;
+        const clicks = Math.floor(budget / cpc);
+        const leads = Math.floor(clicks * (cr / 100));
+        const revenue = leads * avgCheck;
         const profit = revenue - budget;
-        
-        let roi = 0;
-        if (budget > 0) {
-            roi = (profit / budget) * 100;
-        }
+        const roi = budget > 0 ? Math.round((profit / budget) * 100) : 0;
 
-        // Обновляем блок результатов
-        roiResult.textContent = roi.toFixed(0) + '%';
-        profitResult.textContent = '$' + profit.toLocaleString(undefined, {maximumFractionDigits: 0});
+        resClicks.innerText = clicks.toLocaleString('ru-RU');
+        resLeads.innerText = leads.toLocaleString('ru-RU');
+        resRevenue.innerText = revenue.toLocaleString('ru-RU') + ' ₽';
         
-        // Цвет ROI (зеленый если > 0, красный если < 0)
-        const highlightBox = document.querySelector('.highlight-box');
-        if (roi >= 0) {
-            roiResult.style.color = '#10b981';
-            highlightBox.style.borderColor = '#10b981';
-            highlightBox.style.background = 'rgba(16, 185, 129, 0.1)';
+        resProfit.innerText = profit.toLocaleString('ru-RU') + ' ₽';
+        if (profit >= 0) {
+            resProfit.style.color = '#00e676';
         } else {
-            roiResult.style.color = '#ef4444';
-            highlightBox.style.borderColor = '#ef4444';
-            highlightBox.style.background = 'rgba(239, 68, 68, 0.1)';
+            resProfit.style.color = '#ff4444';
         }
 
-        // Обновляем график
-        chart.data.datasets[0].data = [budget, revenue];
-        chart.update();
+        resRoi.innerText = roi + '%';
+        if (roi >= 0) {
+            resRoi.style.color = '#00f0ff';
+        } else {
+            resRoi.style.color = '#ff4444';
+        }
+
+        if (roiChart) {
+            roiChart.data.datasets[0].data = [budget, revenue, profit > 0 ? profit : 0];
+            roiChart.update();
+        }
     }
 
-    // Слушатели событий на инпуты
-    budgetInput.addEventListener('input', updateCalc);
-    cpcInput.addEventListener('input', updateCalc);
-    crInput.addEventListener('input', updateCalc);
-    ltvInput.addEventListener('input', updateCalc);
+    if (document.getElementById('roiChart')) {
+        initChart();
+    }
 
-    // Первичный расчет при загрузке
+    [budgetInput, cpcInput, crInput, checkInput].forEach(input => {
+        if (input) {
+            input.addEventListener('input', updateCalc);
+        }
+    });
+
     updateCalc();
 });
-
 
 // --- ЛОГИКА ЗАКРЫТОЙ БАЗЫ ДОКАЗАТЕЛЬСТВ (HR VAULT) ---
 function unlockVault() {
@@ -146,19 +123,40 @@ function unlockVault() {
     const authBox = document.getElementById('vault-auth-box');
     const vaultContent = document.getElementById('vault-content');
     
+    if (!input) return;
     const key = input.value.trim().toUpperCase();
-    if (key === 'ALEX2026' || key === 'POPARTPOP' || key === 'HR2026') {
-        error.style.display = 'none';
-        authBox.style.display = 'none';
-        vaultContent.style.display = 'block';
+    if (key === 'ALEX2026' || key === 'POPARTPOP' || key === 'HR2026' || key === 'VIP' || key === 'ДОБРО') {
+        if (error) error.style.display = 'none';
+        if (authBox) authBox.style.display = 'none';
+        if (vaultContent) vaultContent.style.display = 'block';
     } else {
-        error.style.display = 'block';
+        if (error) error.style.display = 'block';
         input.style.borderColor = '#ff5555';
     }
 }
 
 function lockVault() {
-    document.getElementById('vault-auth-box').style.display = 'block';
-    document.getElementById('vault-content').style.display = 'none';
-    document.getElementById('vault-pass').value = '';
+    const authBox = document.getElementById('vault-auth-box');
+    const vaultContent = document.getElementById('vault-content');
+    const input = document.getElementById('vault-pass');
+    const error = document.getElementById('vault-error');
+    
+    if (authBox) authBox.style.display = 'block';
+    if (vaultContent) vaultContent.style.display = 'none';
+    if (input) {
+        input.value = '';
+        input.style.borderColor = '#333';
+    }
+    if (error) error.style.display = 'none';
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const passInput = document.getElementById('vault-pass');
+    if (passInput) {
+        passInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                unlockVault();
+            }
+        });
+    }
+});
